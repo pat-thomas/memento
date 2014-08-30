@@ -12,13 +12,10 @@
   (let [registry-atom-name (-> registry-name
                                (str "-registry")
                                symbol)
-        register-fn-name   (if-not register-fn-alias
-                             (make-fn-name :register registry-name)
-                             register-fn-alias)
-        trigger-fn-name    (if-not trigger-fn-alias
-                             (make-fn-name :trigger registry-name)
-                    
-         trigger-fn-alias)]
+        register-fn-name   (or register-fn-alias
+                               (make-fn-name :register registry-name))
+        trigger-fn-name    (or trigger-fn-alias
+                               (make-fn-name :trigger registry-name))]
     `(do
        ;; define registry
        (def ~registry-atom-name (atom {}))
