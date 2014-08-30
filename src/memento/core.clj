@@ -29,6 +29,8 @@
        
        ;; define trigger!-fn
        (defn ~trigger-fn-name
-         [handler-name# data#]
+         [handler-name# & [data#]]
          (when-let [handler# (get (deref ~registry-atom-name) handler-name#)]
-           (handler# data#))))))
+           (if data#
+             (handler# data#)
+             (handler#)))))))
