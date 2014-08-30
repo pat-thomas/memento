@@ -4,9 +4,7 @@
   [prefix registry-name]
   (-> prefix
       name
-      (str "-")
-      (str registry-name)
-      (str "-handler!")
+      (str "-" registry-name "-handler!")
       symbol))
 
 (defmacro defregistry
