@@ -10,12 +10,16 @@
       symbol))
 
 (defmacro defregistry
-  [registry-name]
+  [registry-name & [{:keys [register-fn-alias trigger-fn-alias] :as opts}]]
   (let [registry-atom-name (-> registry-name (str "-registry") symbol)
-        register-fn-name   (make-fn-name :register registry-name)
-        trigger-fn-name    (make-fn-name :trigger  registry-name)]
+        register-fn-name   (if-not register-fn-alias
+                             (make-fn-name :register registry-name)
+                             register-fn-alias)
+        trigger-fn-name    (if-not trigger-fn-alias
+                             (make-fn-name :trigger registry-name)
+                             trigger-fn-alias)]
     `(do
-       ;; define registry:    
+       ;; define registry
        (def ~registry-atom-name (atom {}))
 
        ;; define register!-fn
