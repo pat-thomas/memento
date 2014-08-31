@@ -9,13 +9,13 @@
 
 (defmacro defregistry
   [registry-name & [{:keys [register-fn-alias trigger-fn-alias] :as opts}]]
-  (let [registry-atom-name (-> registry-name
-                               (str "-registry")
-                               symbol)
-        register-fn-name   (or register-fn-alias
-                               (make-fn-name :register registry-name))
-        trigger-fn-name    (or trigger-fn-alias
-                               (make-fn-name :trigger registry-name))]
+  (let [registry-atom-name       (-> registry-name
+                                     (str "-registry")
+                                     symbol)
+        make-defregistry-fn-name (fn [prefix alias]
+                                   (or alias (make-fn-name prefix registry-name)))
+        register-fn-name         (make-defregistry-fn-name :register register-fn-alias)
+        trigger-fn-name          (make-defregistry-fn-name :trigger trigger-fn-alias)]
     `(do
        ;; define registry
        (def ~registry-atom-name (atom {}))
