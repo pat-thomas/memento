@@ -15,6 +15,7 @@
         make-defregistry-fn-name (fn [prefix alias]
                                    (or alias (make-fn-name prefix registry-name)))
         register-fn-name         (make-defregistry-fn-name :register register-fn-alias)
+        multi-register-fn-name   (symbol (str (apply str (drop-last (str register-fn-name))) "s!"))
         trigger-fn-name          (make-defregistry-fn-name :trigger trigger-fn-alias)]
     `(do
        ;; define registry
@@ -24,6 +25,12 @@
        (defn ~register-fn-name
          [handler-name# impl#]
          (swap! ~registry-atom-name assoc handler-name# impl#))
+
+       ;; define register!-fn (plural)
+       (defn ~multi-register-fn-name
+         [& registry-pairs#]
+         (doseq [[handler-name# impl#] (partition 2 registry-pairs#)]
+           (swap! ~registry-atom-name assoc handler-name# impl#)))
        
        ;; define trigger!-fn
        (defn ~trigger-fn-name
