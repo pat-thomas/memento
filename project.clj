@@ -1,4 +1,4 @@
-(defproject memento "0.2.0"
+(defproject memento "0.2.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
