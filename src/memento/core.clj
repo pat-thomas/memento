@@ -24,13 +24,15 @@
        ;; define register!-fn
        (defn ~register-fn-name
          [handler-name# impl#]
-         (swap! ~registry-atom-name assoc handler-name# impl#))
+         (do (swap! ~registry-atom-name assoc handler-name# impl#)
+             (-> ~registry-atom-name deref keys sort)))
 
        ;; define register!-fn (plural)
        (defn ~multi-register-fn-name
          [& registry-pairs#]
-         (doseq [[handler-name# impl#] (partition 2 registry-pairs#)]
-           (swap! ~registry-atom-name assoc handler-name# impl#)))
+         (do (doseq [[handler-name# impl#] (partition 2 registry-pairs#)]
+               (swap! ~registry-atom-name assoc handler-name# impl#))
+             (-> ~registry-atom-name deref keys sort)))
        
        ;; define trigger!-fn
        (defn ~trigger-fn-name
@@ -39,3 +41,4 @@
            (if data#
              (handler# data#)
              (handler#)))))))
+
